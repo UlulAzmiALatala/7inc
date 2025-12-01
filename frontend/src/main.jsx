@@ -7,36 +7,36 @@ import "./index.css";
 // --- ADMIN DASHBOARD ---
 import AdminApp from "./admin/AdminApp.jsx";
 
-// --- ADMIN PAGES (OLD STRUCTURE - Masih Dipakai) ---
-// Pastikan folder sudah direname menjadi 'pages' (bukan 'Page')
+// --- ADMIN PAGES ---
 import AdminTentangKamiFull from "./admin/pages/TentangKamiFull.jsx";
 import AdminBisnisKamiFull from "./admin/pages/BisnisKamiFull.jsx";
 import AdminKontakFull from "./admin/pages/KontakFull.jsx";
-import AdminLowonganKerja from "./admin/pages/LowonganKerja.jsx"; // Daftar Pelamar
+import AdminLowonganKerja from "./admin/pages/LowonganKerja.jsx";
 import AdminLowonganKerjaFull from "./admin/pages/LowonganKerjaFull.jsx";
-import AdminInternship from "./admin/pages/Internship.jsx";
 import AdminSyaratLoker from "./admin/pages/SyaratLoker.jsx";
-import AdminIsiBerita from "./admin/pages/IsiBerita.jsx"; // Preview isi berita
+import AdminIsiBerita from "./admin/pages/IsiBerita.jsx";
 
 // --- ADMIN SETTINGS & HOME EDITORS ---
 import AdminProfil from "./admin/settings/Profil.jsx";
-import AdminDashboard from "./admin/home/EditNavbar.jsx"; // Edit Navbar & Logo
+import AdminDashboard from "./admin/home/EditNavbar.jsx";
 import AdminEditTentangKami from "./admin/home/EditTentangKami.jsx";
-import AdminEditLowonganKerja from "./admin/home/EditLowonganKerja.jsx"; // Edit Konten Loker
+import AdminEditLowonganKerja from "./admin/home/EditLowonganKerja.jsx";
 import AdminEditBisnisKami from "./admin/home/EditBisnisKami.jsx";
 import AdminLink from "./admin/home/EditLink.jsx";
-import AdminEditInternship from "./admin/home/EditInternship.jsx";
 import AdminEditHeroSection from "./admin/home/EditHeroSection.jsx";
 
 // --- MODULE BARU (REFACTORED - Feature First) ---
 import AdminJobPositionsIndex from "./admin/pages/job-positions/Index.jsx";
 import AdminNewsIndex from "./admin/pages/news/Index.jsx";
 
+// [PERBAIKAN] Mengarah ke folder 'internship/Index.jsx' (Dashboard Modal), BUKAN 'Internship.jsx' (File Lama)
+import AdminInternshipIndex from "./admin/pages/internship/Index.jsx";
+
 // --- USER (PUBLIC) PAGES ---
 import App from "./App.jsx";
 import TentangKamiFull from "./pages/TentangKamiFull.jsx";
 import BisnisKamiFull from "./pages/BisnisKamiFull.jsx";
-import Internship from "./pages/Internship.jsx";
+import Internship from "./pages/Internship.jsx"; // Halaman Publik (Landing Page User)
 import LowonganKerja from "./pages/LowonganKerja.jsx";
 import LowonganKerjaFull from "./pages/LowonganKerjaFull.jsx";
 import KontakFull from "./pages/KontakFull.jsx";
@@ -54,7 +54,6 @@ import "animate.css";
 import AOS from "aos";
 import "aos/dist/aos.css";
 
-// Inisialisasi Animation on Scroll
 AOS.init();
 
 createRoot(document.getElementById("root")).render(
@@ -63,7 +62,6 @@ createRoot(document.getElementById("root")).render(
       <Routes>
         {/* =========================================
             1. ROUTE PUBLIC (USER / CUSTOMER)
-            Dapat diakses oleh siapa saja tanpa login
            ========================================= */}
         <Route path="/" element={<App />} />
         <Route path="/tentang-kami" element={<TentangKamiFull />} />
@@ -83,12 +81,8 @@ createRoot(document.getElementById("root")).render(
 
         {/* =========================================
             3. ROUTE ADMIN (PROTECTED)
-            Menggunakan logika allowedRoles
            ========================================= */}
 
-        {/* --- GROUP 1: DASHBOARD UMUM --- 
-            Bisa diakses oleh: SUPER ADMIN & ADMIN KONTEN
-        */}
         <Route
           path="/admin"
           element={
@@ -98,11 +92,7 @@ createRoot(document.getElementById("root")).render(
           }
         />
 
-        {/* --- GROUP 2: MANAJEMEN KONTEN HARIAN --- 
-            Bisa diakses oleh: SUPER ADMIN & ADMIN KONTEN
-        */}
-
-        {/* Module Berita (REFACTORED) */}
+        {/* Module Berita */}
         <Route
           path="/admin/berita"
           element={
@@ -111,7 +101,6 @@ createRoot(document.getElementById("root")).render(
             </ProtectedRouteAdmin>
           }
         />
-        {/* Redirect route edit lama ke index baru */}
         <Route
           path="/admin/edit-berita"
           element={
@@ -121,7 +110,7 @@ createRoot(document.getElementById("root")).render(
           }
         />
         <Route
-          path="/admin/isi-berita"
+          path="/admin/news/:slug"
           element={
             <ProtectedRouteAdmin allowedRoles={["super_admin", "admin_konten"]}>
               <AdminIsiBerita />
@@ -129,9 +118,9 @@ createRoot(document.getElementById("root")).render(
           }
         />
 
-        {/* Module Lowongan Kerja & Pelamar */}
+        {/* Module Lowongan Kerja */}
         <Route
-          path="/admin/lowongan-kerja" // Halaman Daftar Pelamar
+          path="/admin/lowongan-kerja"
           element={
             <ProtectedRouteAdmin allowedRoles={["super_admin", "admin_konten"]}>
               <AdminLowonganKerja />
@@ -155,7 +144,7 @@ createRoot(document.getElementById("root")).render(
           }
         />
         <Route
-          path="/admin/edit-loker" // Halaman Edit Konten Statis Loker
+          path="/admin/edit-loker"
           element={
             <ProtectedRouteAdmin allowedRoles={["super_admin", "admin_konten"]}>
               <AdminEditLowonganKerja />
@@ -163,7 +152,7 @@ createRoot(document.getElementById("root")).render(
           }
         />
 
-        {/* Module Posisi Pekerjaan (REFACTORED - CRUD Master Data) */}
+        {/* Module Posisi Pekerjaan */}
         <Route
           path="/admin/edit-posisi-pekerjaan"
           element={
@@ -173,29 +162,27 @@ createRoot(document.getElementById("root")).render(
           }
         />
 
-        {/* Module Internship */}
+        {/* Module Internship (PERBAIKAN) */}
+        {/* Menggunakan AdminInternshipIndex yang baru */}
         <Route
           path="/admin/internship"
           element={
             <ProtectedRouteAdmin allowedRoles={["super_admin", "admin_konten"]}>
-              <AdminInternship />
+              <AdminInternshipIndex />
             </ProtectedRouteAdmin>
           }
         />
+        {/* Route edit lama kita arahkan ke index baru juga agar aman */}
         <Route
           path="/admin/edit-internship"
           element={
             <ProtectedRouteAdmin allowedRoles={["super_admin", "admin_konten"]}>
-              <AdminEditInternship />
+              <AdminInternshipIndex />
             </ProtectedRouteAdmin>
           }
         />
 
-        {/* --- GROUP 3: AREA SENSITIF & KONFIGURASI (KHUSUS SUPER ADMIN) --- 
-            Hanya Super Admin yang bisa akses setting vital perusahaan
-        */}
-
-        {/* Profil & Akun */}
+        {/* --- SETTINGS (SUPER ADMIN) --- */}
         <Route
           path="/admin/profil"
           element={
@@ -204,8 +191,6 @@ createRoot(document.getElementById("root")).render(
             </ProtectedRouteAdmin>
           }
         />
-
-        {/* Informasi Perusahaan */}
         <Route
           path="/admin/tentang-kami"
           element={
@@ -215,7 +200,7 @@ createRoot(document.getElementById("root")).render(
           }
         />
         <Route
-          path="/admin/edit-info" // Edit Halaman Tentang Kami
+          path="/admin/edit-info"
           element={
             <ProtectedRouteAdmin allowedRoles={["super_admin"]}>
               <AdminEditTentangKami />
@@ -246,10 +231,8 @@ createRoot(document.getElementById("root")).render(
             </ProtectedRouteAdmin>
           }
         />
-
-        {/* Tampilan Website & Layout */}
         <Route
-          path="/admin/dashboard" // Edit Navbar & Logo
+          path="/admin/dashboard"
           element={
             <ProtectedRouteAdmin allowedRoles={["super_admin"]}>
               <AdminDashboard />
@@ -257,7 +240,7 @@ createRoot(document.getElementById("root")).render(
           }
         />
         <Route
-          path="/admin/edit-appearance" // Edit Hero Section
+          path="/admin/edit-appearance"
           element={
             <ProtectedRouteAdmin allowedRoles={["super_admin"]}>
               <AdminEditHeroSection />
@@ -265,7 +248,7 @@ createRoot(document.getElementById("root")).render(
           }
         />
         <Route
-          path="/admin/edit-link" // Edit Link Sosmed
+          path="/admin/edit-link"
           element={
             <ProtectedRouteAdmin allowedRoles={["super_admin"]}>
               <AdminLink />
