@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
-import AdminLayout from "../../layouts/AdminLayout";
 import NewsFormModal from "./components/NewsFormModal";
 import DeleteModal from "./components/DeleteModal";
 
@@ -56,7 +55,7 @@ const NewsIndex = () => {
   };
 
   return (
-    <AdminLayout>
+    <div className="p-6">
       <div className="flex flex-col md:flex-row justify-between items-center mb-6 gap-4">
         <div>
           <h1 className="text-2xl font-bold text-gray-800">Berita & Artikel</h1>
@@ -220,7 +219,7 @@ const NewsIndex = () => {
         onSuccess={fetchNews}
         dataToDelete={selectedItem}
       />
-    </AdminLayout>
+    </div>
   );
 };
 

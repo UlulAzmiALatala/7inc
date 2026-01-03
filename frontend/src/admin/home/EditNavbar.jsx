@@ -1,6 +1,5 @@
 import { useState, useEffect } from "react";
 import axios from "axios";
-import AdminLayout from "../layouts/AdminLayout";
 
 const EditNavbar = () => {
     const [preview, setPreview] = useState(null);
@@ -89,9 +88,8 @@ const EditNavbar = () => {
     };
 
     return (
-        <AdminLayout>
-            <div className="flex flex-col items-center w-full mx-auto pt-[120px] pb-[100px] border-2 border-gray-200 rounded-lg">
-                <h1 className="text-black text-6xl font-bold text-center italic">EDIT LOGO</h1>
+        <div className="p-6">
+            <h1 className="text-3xl font-bold mb-6 text-gray-800">Edit Navbar</h1>
 
                 {/* ALERT SUKSES */}
                 {success && (
@@ -167,8 +165,7 @@ const EditNavbar = () => {
                         </div>
                     )}
                 </div>
-            </div>
-        </AdminLayout>
+        </div>
     );
 };
 

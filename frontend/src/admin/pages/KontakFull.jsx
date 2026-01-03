@@ -1,6 +1,4 @@
 import { useState } from "react";
-import Layout from "../components/Layout";
-import Footer from "../components/Footer";
 import Container from "../components/Container";
 
 const KontakFull = () => {
@@ -92,7 +90,7 @@ const KontakFull = () => {
     };
 
     return (
-        <Layout>
+        <div className="bg-gray-50 min-h-screen">
             <Container>
                 {/* Bagian Judul */}
                 <div className="mb-10 pt-[120px]">
@@ -307,8 +305,7 @@ const KontakFull = () => {
                     referrerPolicy="no-referrer-when-downgrade"
                 ></iframe>
             </div>
-            <Footer />
-        </Layout>
+        </div>
     );
 };
 

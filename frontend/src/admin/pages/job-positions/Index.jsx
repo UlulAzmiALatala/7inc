@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
-import AdminLayout from "../../layouts/AdminLayout";
 import JobFormModal from "./components/JobFormModal";
 import RequirementsModal from "./components/RequirementsModal";
 import DeleteModal from "./components/DeleteModal";
@@ -65,7 +64,7 @@ const JobPositionsIndex = () => {
   };
 
   return (
-    <AdminLayout>
+    <div className="p-6">
       <div className="flex justify-between items-center mb-6">
         <div>
           <h1 className="text-2xl font-bold text-gray-800">Posisi Pekerjaan</h1>
@@ -200,7 +199,7 @@ const JobPositionsIndex = () => {
         onSuccess={fetchPositions}
         dataToDelete={selectedItem}
       />
-    </AdminLayout>
+    </div>
   );
 };
 

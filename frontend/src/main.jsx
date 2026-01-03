@@ -29,6 +29,13 @@ import AdminEditHeroSection from "./admin/home/EditHeroSection.jsx";
 import AdminJobPositionsIndex from "./admin/pages/job-positions/Index.jsx";
 import AdminNewsIndex from "./admin/pages/news/Index.jsx";
 
+// --- NEW ADMIN MODULES (GENERATED) ---
+import AdminArticleList from "./admin/pages/articles/Index.jsx";
+import AdminTaskList from "./admin/pages/tasks/Index.jsx";
+import AdminVacancyApplicants from "./admin/pages/vacancies/Applicants.jsx";
+import AdminVacancyContent from "./admin/pages/vacancies/Content.jsx";
+import AdminVacancyTerms from "./admin/pages/vacancies/Terms.jsx";
+
 // [PERBAIKAN] Mengarah ke folder 'internship/Index.jsx' (Dashboard Modal), BUKAN 'Internship.jsx' (File Lama)
 import AdminInternshipIndex from "./admin/pages/internship/Index.jsx";
 
@@ -45,14 +52,18 @@ import SyaratLoker from "./pages/SyaratLoker.jsx";
 import IsiBerita from "./pages/IsiBerita.jsx";
 
 // --- AUTH & SECURITY ---
-import LoginAdmin from "./masuk/LoginAdmin.jsx";
+import LoginUnified from "./masuk/LoginUnified.jsx";
+import RegisterUnified from "./masuk/RegisterUnified.jsx";
+import Logout from "./masuk/Logout.jsx";
 import ProtectedRouteAdmin from "./components/ProtectedRouteAdmin.jsx";
+import WriterDashboard from "./writer/WriterDashboard.jsx";
 
 // --- PLUGINS ---
 import "remixicon/fonts/remixicon.css";
 import "animate.css";
 import AOS from "aos";
 import "aos/dist/aos.css";
+import "./api/setupAxios";
 
 AOS.init();
 
@@ -75,19 +86,92 @@ createRoot(document.getElementById("root")).render(
         <Route path="/syarat-loker" element={<SyaratLoker />} />
 
         {/* =========================================
-            2. ROUTE LOGIN ADMIN
+            2. ROUTE LOGIN & REGISTER (UNIFIED)
            ========================================= */}
-        <Route path="/admin/login" element={<LoginAdmin />} />
+        <Route path="/login" element={<LoginUnified />} />
+        <Route path="/admin/login" element={<LoginUnified />} />
+        <Route path="/register" element={<RegisterUnified />} />
+        <Route path="/logout" element={<Logout />} />
 
         {/* =========================================
             3. ROUTE ADMIN (PROTECTED)
            ========================================= */}
 
+        {/* Writer Dashboard */}
+        <Route
+          path="/writer"
+          element={
+            <ProtectedRouteAdmin allowedRoles={["writer"]}>
+              <WriterDashboard />
+            </ProtectedRouteAdmin>
+          }
+        />
+
         <Route
           path="/admin"
           element={
-            <ProtectedRouteAdmin allowedRoles={["super_admin", "admin_konten"]}>
+            <ProtectedRouteAdmin allowedRoles={["admin"]}>
               <AdminApp />
+            </ProtectedRouteAdmin>
+          }
+        />
+
+        {/* --- NEW ADMIN ROUTES (WORKFLOW) --- */}
+        <Route
+          path="/admin/articles"
+          element={
+            <ProtectedRouteAdmin allowedRoles={["admin"]}>
+              <AdminArticleList />
+            </ProtectedRouteAdmin>
+          }
+        />
+        <Route
+          path="/admin/tasks"
+          element={
+            <ProtectedRouteAdmin allowedRoles={["admin"]}>
+              <AdminTaskList />
+            </ProtectedRouteAdmin>
+          }
+        />
+        <Route
+          path="/admin/internships"
+          element={
+            <ProtectedRouteAdmin allowedRoles={["admin"]}>
+              <AdminInternshipIndex />
+            </ProtectedRouteAdmin>
+          }
+        />
+        
+        {/* Module Vacancies (New Structure) */}
+        <Route
+          path="/admin/vacancies/applicants"
+          element={
+            <ProtectedRouteAdmin allowedRoles={["admin"]}>
+              <AdminVacancyApplicants />
+            </ProtectedRouteAdmin>
+          }
+        />
+        <Route
+          path="/admin/vacancies/content"
+          element={
+            <ProtectedRouteAdmin allowedRoles={["admin"]}>
+              <AdminVacancyContent />
+            </ProtectedRouteAdmin>
+          }
+        />
+        <Route
+          path="/admin/vacancies/positions"
+          element={
+            <ProtectedRouteAdmin allowedRoles={["admin"]}>
+              <AdminJobPositionsIndex />
+            </ProtectedRouteAdmin>
+          }
+        />
+        <Route
+          path="/admin/vacancies/terms"
+          element={
+            <ProtectedRouteAdmin allowedRoles={["admin"]}>
+              <AdminVacancyTerms /> 
             </ProtectedRouteAdmin>
           }
         />
@@ -96,7 +180,7 @@ createRoot(document.getElementById("root")).render(
         <Route
           path="/admin/berita"
           element={
-            <ProtectedRouteAdmin allowedRoles={["super_admin", "admin_konten"]}>
+            <ProtectedRouteAdmin allowedRoles={["admin"]}>
               <AdminNewsIndex />
             </ProtectedRouteAdmin>
           }
@@ -104,7 +188,7 @@ createRoot(document.getElementById("root")).render(
         <Route
           path="/admin/edit-berita"
           element={
-            <ProtectedRouteAdmin allowedRoles={["super_admin", "admin_konten"]}>
+            <ProtectedRouteAdmin allowedRoles={["admin"]}>
               <AdminNewsIndex />
             </ProtectedRouteAdmin>
           }
@@ -112,7 +196,7 @@ createRoot(document.getElementById("root")).render(
         <Route
           path="/admin/news/:slug"
           element={
-            <ProtectedRouteAdmin allowedRoles={["super_admin", "admin_konten"]}>
+            <ProtectedRouteAdmin allowedRoles={["admin"]}>
               <AdminIsiBerita />
             </ProtectedRouteAdmin>
           }
@@ -122,7 +206,7 @@ createRoot(document.getElementById("root")).render(
         <Route
           path="/admin/lowongan-kerja"
           element={
-            <ProtectedRouteAdmin allowedRoles={["super_admin", "admin_konten"]}>
+            <ProtectedRouteAdmin allowedRoles={["admin"]}>
               <AdminLowonganKerja />
             </ProtectedRouteAdmin>
           }
@@ -130,7 +214,7 @@ createRoot(document.getElementById("root")).render(
         <Route
           path="/admin/lowongan-full"
           element={
-            <ProtectedRouteAdmin allowedRoles={["super_admin", "admin_konten"]}>
+            <ProtectedRouteAdmin allowedRoles={["admin"]}>
               <AdminLowonganKerjaFull />
             </ProtectedRouteAdmin>
           }
@@ -138,7 +222,7 @@ createRoot(document.getElementById("root")).render(
         <Route
           path="/admin/syarat-loker"
           element={
-            <ProtectedRouteAdmin allowedRoles={["super_admin", "admin_konten"]}>
+            <ProtectedRouteAdmin allowedRoles={["admin"]}>
               <AdminSyaratLoker />
             </ProtectedRouteAdmin>
           }
@@ -146,7 +230,7 @@ createRoot(document.getElementById("root")).render(
         <Route
           path="/admin/edit-loker"
           element={
-            <ProtectedRouteAdmin allowedRoles={["super_admin", "admin_konten"]}>
+            <ProtectedRouteAdmin allowedRoles={["admin"]}>
               <AdminEditLowonganKerja />
             </ProtectedRouteAdmin>
           }
@@ -156,7 +240,7 @@ createRoot(document.getElementById("root")).render(
         <Route
           path="/admin/edit-posisi-pekerjaan"
           element={
-            <ProtectedRouteAdmin allowedRoles={["super_admin", "admin_konten"]}>
+            <ProtectedRouteAdmin allowedRoles={["admin"]}>
               <AdminJobPositionsIndex />
             </ProtectedRouteAdmin>
           }
@@ -167,7 +251,7 @@ createRoot(document.getElementById("root")).render(
         <Route
           path="/admin/internship"
           element={
-            <ProtectedRouteAdmin allowedRoles={["super_admin", "admin_konten"]}>
+            <ProtectedRouteAdmin allowedRoles={["admin"]}>
               <AdminInternshipIndex />
             </ProtectedRouteAdmin>
           }
@@ -176,7 +260,7 @@ createRoot(document.getElementById("root")).render(
         <Route
           path="/admin/edit-internship"
           element={
-            <ProtectedRouteAdmin allowedRoles={["super_admin", "admin_konten"]}>
+            <ProtectedRouteAdmin allowedRoles={["admin"]}>
               <AdminInternshipIndex />
             </ProtectedRouteAdmin>
           }
@@ -186,7 +270,7 @@ createRoot(document.getElementById("root")).render(
         <Route
           path="/admin/profil"
           element={
-            <ProtectedRouteAdmin allowedRoles={["super_admin"]}>
+            <ProtectedRouteAdmin allowedRoles={["admin"]}>
               <AdminProfil />
             </ProtectedRouteAdmin>
           }
@@ -194,7 +278,7 @@ createRoot(document.getElementById("root")).render(
         <Route
           path="/admin/tentang-kami"
           element={
-            <ProtectedRouteAdmin allowedRoles={["super_admin"]}>
+            <ProtectedRouteAdmin allowedRoles={["admin"]}>
               <AdminTentangKamiFull />
             </ProtectedRouteAdmin>
           }

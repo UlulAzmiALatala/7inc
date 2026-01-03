@@ -1,5 +1,4 @@
 import { useEffect, useRef, useState, Fragment } from "react";
-import AdminLayout from "../layouts/AdminLayout";
 import Container from "../components/Container";
 import axios from "axios";
 
@@ -261,7 +260,7 @@ export default function EditInternship() {
 
 
     return (
-        <AdminLayout>
+        <div className="p-6">
             <Container className="max-w-[1200px]">
                 {alert && (
                     <div role="alert" className={`alert mb-6 ${alert.type === "success" ? "alert-success" : "alert-error"}`}>
@@ -493,6 +492,5 @@ export default function EditInternship() {
                     </div>
                 </section>
             </Container>
-        </AdminLayout>
     );
 }

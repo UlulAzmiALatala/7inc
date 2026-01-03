@@ -1,7 +1,6 @@
 // src/admin/home/EditPosisiPekerjaan.jsx
 import { useState, useEffect, useMemo } from "react";
 import axios from "axios";
-import AdminLayout from "../layouts/AdminLayout";
 
 const API_BASE = "http://127.0.0.1:8000/api";
 
@@ -321,7 +320,7 @@ const EditPosisiPekerjaan = () => {
 
     // ================== RENDER ==================
     return (
-        <AdminLayout>
+        <div className="p-6">
             <h1 className="text-5xl text-black text-center font-bold italic">Edit Posisi Pekerjaan</h1>
 
             {/* Form to add or edit position */}
@@ -572,7 +571,6 @@ const EditPosisiPekerjaan = () => {
                 </div>
             </div>
             {/* ================== /PANEL SYARAT LOKER ================== */}
-        </AdminLayout>
     );
 };
 

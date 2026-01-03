@@ -1,6 +1,5 @@
 import axios from "axios";
 import { useEffect, useState } from "react";
-import AdminLayout from "../layouts/AdminLayout";
 
 const API_BASE = "http://127.0.0.1:8000";
 
@@ -164,8 +163,7 @@ const EditLink = () => {
     );
 
     return (
-        <AdminLayout>
-            <div className="pt-[120px] pb-[100px]">
+        <div className="p-6">
                 <div className="w-full mx-auto border-2 border-gray-200 rounded-lg p-6 max-w-5xl bg-white">
                     {/* Judul */}
                     <div className="mb-6 text-center">
@@ -229,15 +227,7 @@ const EditLink = () => {
                                 <button
                                     onClick={handleSaveAll}
                                     disabled={savingAll}
-                                    className="px-6 py-2 rounded-lg font-semibold
-                             border border-lime-500
-                             bg-lime-500 text-white
-                             hover:bg-green-500 hover:text-white hover:border-green-500
-                             focus:bg-green-500 focus:text-white focus:border-green-500
-                             focus:ring-2 focus:ring-green-500
-                             active:bg-green-500 active:text-white active:border-green-500
-                             disabled:opacity-60 disabled:cursor-not-allowed
-                             transition-colors duration-200 cursor-pointer"
+                                    className="px-6 py-2 rounded-lg font-semibold border border-lime-500 bg-lime-500 text-white hover:bg-green-500 hover:text-white hover:border-green-500 focus:bg-green-500 focus:text-white focus:border-green-500 focus:ring-2 focus:ring-green-500 active:bg-green-500 active:text-white active:border-green-500 disabled:opacity-60 disabled:cursor-not-allowed transition-colors duration-200 cursor-pointer"
                                 >
                                     {savingAll ? "Menyimpan…" : "Simpan"}
                                 </button>
@@ -246,7 +236,7 @@ const EditLink = () => {
                     )}
                 </div>
             </div>
-        </AdminLayout>
+        
     );
 };
 

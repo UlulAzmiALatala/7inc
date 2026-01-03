@@ -1,6 +1,5 @@
 import { useEffect, useRef, useState } from "react";
 import axios from "axios";
-import AdminLayout from "../layouts/AdminLayout";
 
 const API_BASE = "http://127.0.0.1:8000/api";
 
@@ -253,7 +252,7 @@ const EditLowonganKerja = () => {
 
     // ========== UI ========== 
     return (
-        <AdminLayout>
+        <div className="p-6">
             <h1 className="text-black text-5xl font-bold text-center italic">Lowongan Kerja</h1>
 
             {!loaded ? (
@@ -395,7 +394,7 @@ const EditLowonganKerja = () => {
                     </div>
                 </div>
             )}
-        </AdminLayout>
+        </div>
     );
 };
 

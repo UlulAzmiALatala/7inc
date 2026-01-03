@@ -1,5 +1,5 @@
-import React, { useState } from "react";
-import axios from "axios";
+import React, { useState, useEffect } from "react";
+import { api } from "../api/client.js";
 import { useNavigate } from "react-router-dom";
 
 const LoginAdmin = () => {
@@ -10,6 +10,16 @@ const LoginAdmin = () => {
     const [success, setSuccess] = useState("");
     const navigate = useNavigate();
 
+    useEffect(() => {
+        const token = localStorage.getItem("token");
+        const role = localStorage.getItem("role");
+        if (token && role) {
+            if (role === "admin") navigate("/admin");
+            else if (role === "writer") navigate("/writer");
+            else navigate("/");
+        }
+    }, [navigate]);
+
     const handleLogin = async (e) => {
         e.preventDefault();
         setLoading(true);
@@ -17,25 +27,30 @@ const LoginAdmin = () => {
         setSuccess("");
 
         try {
-            const res = await axios.post("http://127.0.0.1:8000/api/admin/login", {
+            const res = await api.post("/api/auth/login", {
                 email,
                 password,
             });
 
-            if (res.data.status) {
+            if (res.data.success) {
                 setSuccess("Login berhasil!");
 
-                // Simpan token dan data admin ke localStorage
-                localStorage.setItem("adminToken", res.data.token);
-                localStorage.setItem("adminData", JSON.stringify(res.data.admin));
+                localStorage.setItem("token", res.data.token);
+                localStorage.setItem("role", res.data.user.role);
+                localStorage.setItem("userData", JSON.stringify(res.data.user));
 
-                // Redirect ke landing page admin
                 setTimeout(() => {
-                    navigate("/admin");
-                }, 1500);
+                    const role = res.data.user.role;
+                    if (role === "admin") navigate("/admin");
+                    else if (role === "writer") navigate("/writer");
+                    else navigate("/");
+                }, 1000);
             }
         } catch (err) {
-            setError(err.response?.data?.message || "Terjadi kesalahan");
+            const msg = err.response?.data?.message ||
+                        err.response?.data?.errors?.email?.[0] ||
+                        "Terjadi kesalahan saat login";
+            setError(msg);
         } finally {
             setLoading(false);
         }
@@ -50,7 +65,6 @@ const LoginAdmin = () => {
                 {success && <p className="text-green-500 text-sm mb-3">{success}</p>}
 
                 <form className="space-y-3" onSubmit={handleLogin}>
-                    {/* Email */}
                     <div>
                         <label className="input validator mb-1">
                             <svg className="h-[1em] opacity-50" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
@@ -69,7 +83,6 @@ const LoginAdmin = () => {
                         </label>
                     </div>
 
-                    {/* Password */}
                     <div>
                         <label className="input validator mb-1">
                             <svg className="h-[1em] opacity-50" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
@@ -97,9 +110,14 @@ const LoginAdmin = () => {
                         {loading ? "Loading..." : "Login"}
                     </button>
                 </form>
+
+                <p className="text-center text-gray-400 text-sm mt-4">
+                    Belum punya akun? <a href="/register" className="text-blue-400 hover:underline">Register</a>
+                </p>
             </div>
         </div>
     );
 };
 
 export default LoginAdmin;
+

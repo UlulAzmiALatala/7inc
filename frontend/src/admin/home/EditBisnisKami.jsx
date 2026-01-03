@@ -2,7 +2,6 @@
 import axios from "axios";
 import { useEffect, useState } from "react";
 import { createPortal } from "react-dom";
-import AdminLayout from "../layouts/AdminLayout";
 
 const API_BASE = import.meta.env.VITE_API_BASE || "http://127.0.0.1:8000/api";
 
@@ -181,10 +180,10 @@ export default function EditBisnisKami() {
 
     if (loading) {
         return (
-            <AdminLayout>
+            <>
                 <AlertBridge />
                 <div className="w-full py-24 text-center">Memuat…</div>
-            </AdminLayout>
+            </>
         );
     }
 
@@ -224,7 +223,7 @@ export default function EditBisnisKami() {
     ];
 
     return (
-        <AdminLayout>
+        <div className="p-6">
             <AlertBridge />
 
             <div className="w-full mx-auto py-12">
@@ -430,6 +429,6 @@ export default function EditBisnisKami() {
                     </section>
                 ))}
             </div>
-        </AdminLayout>
+        </div>
     );
 }

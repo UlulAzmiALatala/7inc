@@ -8,6 +8,7 @@ use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\Storage;
 use App\Models\Admin;
+use App\Models\Role;
 
 class AdminAuthController extends Controller
 {
@@ -28,11 +29,18 @@ class AdminAuthController extends Controller
             ], 422);
         }
 
+        // Map role string to role_id
+        $roleName = $request->role;
+        $dbRoleName = $roleName === 'admin_konten' ? 'admin' : $roleName;
+        $role = Role::where('name', $dbRoleName)->first();
+        $roleId = $role ? $role->id : 1; // Default to 1 (super_admin) if not found, though should exist
+
         $admin = Admin::create([
             'name' => $request->name,
             'email' => $request->email,
             'password' => Hash::make($request->password),
             'role' => $request->role,
+            'role_id' => $roleId,
         ]);
 
         $token = $admin->createToken('admin_token')->plainTextToken;

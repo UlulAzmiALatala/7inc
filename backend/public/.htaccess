@@ -13,6 +13,19 @@
     RewriteCond %{HTTP:x-xsrf-token} .
     RewriteRule .* - [E=HTTP_X_XSRF_TOKEN:%{HTTP:X-XSRF-Token}]
 
+    # CORS Headers
+    <IfModule mod_headers.c>
+        Header always set "Access-Control-Allow-Origin" "http://localhost:5173"
+        Header always set "Access-Control-Allow-Methods" "GET, POST, PUT, PATCH, DELETE, OPTIONS"
+        Header always set "Access-Control-Allow-Headers" "Content-Type, Authorization, Accept, Origin, X-Requested-With, X-CSRF-TOKEN"
+        Header always set "Access-Control-Expose-Headers" "Content-Length, X-Total-Count, X-Total-Pages, Authorization"
+        Header always set "Access-Control-Allow-Credentials" "true"
+        
+        # Handle preflight
+        RewriteCond %{REQUEST_METHOD} OPTIONS
+        RewriteRule ^(.*)$ $1 [R=200,L]
+    </IfModule>
+
     # Redirect Trailing Slashes If Not A Folder...
     RewriteCond %{REQUEST_FILENAME} !-d
     RewriteCond %{REQUEST_URI} (.+)/$

@@ -1,15 +1,18 @@
 import { useState, useEffect } from "react";
 import { createPortal } from "react-dom"; // Import Portal
-import axios from "axios";
-
-const API_BASE = "http://127.0.0.1:8000/api";
+import { api } from "../../../../api/client";
 
 const JobFormModal = ({ isOpen, onClose, onSuccess, dataToEdit }) => {
   const [formData, setFormData] = useState({
     title: "",
-    company: "",
+    description: "",
+    requirements: "",
     location: "",
-    close_date: "",
+    job_type: "full-time",
+    salary_range: "",
+    deadline: "",
+    google_form_url: "https://forms.google.com", // Default or empty
+    status: "open"
   });
   const [loading, setLoading] = useState(false);
 
@@ -18,14 +21,29 @@ const JobFormModal = ({ isOpen, onClose, onSuccess, dataToEdit }) => {
     if (isOpen) {
       if (dataToEdit) {
         setFormData({
-          title: dataToEdit.title,
-          company: dataToEdit.company,
-          location: dataToEdit.location,
-          close_date: dataToEdit.close_date,
+          title: dataToEdit.title || "",
+          description: dataToEdit.description || "",
+          requirements: dataToEdit.requirements || "",
+          location: dataToEdit.location || "",
+          job_type: dataToEdit.job_type || "full-time",
+          salary_range: dataToEdit.salary_range || "",
+          deadline: dataToEdit.deadline ? dataToEdit.deadline.split('T')[0] : "",
+          google_form_url: dataToEdit.google_form_url || "",
+          status: dataToEdit.status || "open"
         });
       } else {
         // Reset form jika mode tambah baru
-        setFormData({ title: "", company: "", location: "", close_date: "" });
+        setFormData({
+            title: "",
+            description: "",
+            requirements: "",
+            location: "",
+            job_type: "full-time",
+            salary_range: "",
+            deadline: "",
+            google_form_url: "",
+            status: "open"
+        });
       }
     }
   }, [isOpen, dataToEdit]);
@@ -36,17 +54,12 @@ const JobFormModal = ({ isOpen, onClose, onSuccess, dataToEdit }) => {
 
     try {
       const url = dataToEdit
-        ? `${API_BASE}/admin/job-works/${dataToEdit.id}`
-        : `${API_BASE}/admin/job-works`;
+        ? `/api/admin/vacancies/${dataToEdit.id}`
+        : `/api/admin/vacancies`;
 
       const method = dataToEdit ? "put" : "post";
 
-      await axios[method](url, formData, {
-        headers: {
-          Authorization: `Bearer ${localStorage.getItem("adminToken")}`,
-          Accept: "application/json",
-        },
-      });
+      await api[method](url, formData);
 
       // Refresh data tabel & tutup modal
       onSuccess();
@@ -54,7 +67,7 @@ const JobFormModal = ({ isOpen, onClose, onSuccess, dataToEdit }) => {
     } catch (error) {
       console.error("Error saving job:", error);
       const msg =
-        error.response?.data?.message || "Gagal menyimpan data posisi.";
+        error.response?.data?.message || "Gagal menyimpan data lowongan.";
       alert(msg);
     } finally {
       setLoading(false);
@@ -63,13 +76,12 @@ const JobFormModal = ({ isOpen, onClose, onSuccess, dataToEdit }) => {
 
   if (!isOpen) return null;
 
-  // GUNAKAN createPortal DI SINI
   return createPortal(
     <div className="fixed inset-0 z-[9999] flex items-center justify-center bg-black/50 backdrop-blur-sm">
-      <div className="bg-white rounded-xl shadow-2xl w-full max-w-md p-6 animate__animated animate__fadeInDown">
+      <div className="bg-white rounded-xl shadow-2xl w-full max-w-2xl p-6 animate__animated animate__fadeInDown max-h-[90vh] overflow-y-auto">
         <div className="flex justify-between items-center mb-6">
           <h2 className="text-xl font-bold text-gray-800">
-            {dataToEdit ? "Edit Informasi Posisi" : "Tambah Posisi Baru"}
+            {dataToEdit ? "Edit Lowongan Kerja" : "Tambah Lowongan Baru"}
           </h2>
           <button
             onClick={onClose}
@@ -80,80 +92,147 @@ const JobFormModal = ({ isOpen, onClose, onSuccess, dataToEdit }) => {
         </div>
 
         <form onSubmit={handleSubmit} className="space-y-4">
-          {/* Input Judul Posisi */}
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            {/* Input Judul Posisi */}
+            <div>
+                <label className="block text-sm font-medium text-gray-700 mb-1">
+                Posisi / Judul
+                </label>
+                <input
+                type="text"
+                required
+                className="input input-bordered w-full bg-white text-gray-800"
+                value={formData.title}
+                onChange={(e) =>
+                    setFormData({ ...formData, title: e.target.value })
+                }
+                placeholder="Contoh: UI/UX Designer"
+                />
+            </div>
+
+            {/* Input Lokasi */}
+            <div>
+                <label className="block text-sm font-medium text-gray-700 mb-1">
+                Lokasi
+                </label>
+                <input
+                type="text"
+                required
+                className="input input-bordered w-full bg-white text-gray-800"
+                value={formData.location}
+                onChange={(e) =>
+                    setFormData({ ...formData, location: e.target.value })
+                }
+                placeholder="Contoh: Yogyakarta / Remote"
+                />
+            </div>
+          </div>
+
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            {/* Input Job Type */}
+            <div>
+                <label className="block text-sm font-medium text-gray-700 mb-1">
+                Tipe Pekerjaan
+                </label>
+                <select 
+                    className="select select-bordered w-full bg-white text-gray-800"
+                    value={formData.job_type}
+                    onChange={(e) => setFormData({ ...formData, job_type: e.target.value })}
+                >
+                    <option value="full-time">Full Time</option>
+                    <option value="part-time">Part Time</option>
+                    <option value="contract">Contract</option>
+                    <option value="freelance">Freelance</option>
+                </select>
+            </div>
+
+            {/* Input Deadline */}
+            <div>
+                <label className="block text-sm font-medium text-gray-700 mb-1">
+                Deadline
+                </label>
+                <input
+                type="date"
+                required
+                className="input input-bordered w-full bg-white text-gray-800"
+                value={formData.deadline}
+                onChange={(e) =>
+                    setFormData({ ...formData, deadline: e.target.value })
+                }
+                />
+            </div>
+          </div>
+
+          {/* Salary Range */}
           <div>
             <label className="block text-sm font-medium text-gray-700 mb-1">
-              Posisi / Judul
+              Kisaran Gaji (Opsional)
             </label>
             <input
               type="text"
-              required
               className="input input-bordered w-full bg-white text-gray-800"
-              value={formData.title}
+              value={formData.salary_range}
               onChange={(e) =>
-                setFormData({ ...formData, title: e.target.value })
+                setFormData({ ...formData, salary_range: e.target.value })
               }
-              placeholder="Contoh: UI/UX Designer"
+              placeholder="Contoh: Rp 5.000.000 - Rp 8.000.000"
             />
           </div>
 
-          {/* Input Perusahaan */}
+          {/* Description */}
           <div>
             <label className="block text-sm font-medium text-gray-700 mb-1">
-              Perusahaan
+              Deskripsi Pekerjaan
             </label>
-            <input
-              type="text"
+            <textarea
               required
-              className="input input-bordered w-full bg-white text-gray-800"
-              value={formData.company}
+              className="textarea textarea-bordered w-full bg-white text-gray-800 h-24"
+              value={formData.description}
               onChange={(e) =>
-                setFormData({ ...formData, company: e.target.value })
+                setFormData({ ...formData, description: e.target.value })
               }
-              placeholder="Contoh: Seven Inc"
-            />
+              placeholder="Jelaskan tanggung jawab dan detail pekerjaan..."
+            ></textarea>
           </div>
 
-          {/* Input Lokasi */}
+          {/* Requirements */}
           <div>
             <label className="block text-sm font-medium text-gray-700 mb-1">
-              Lokasi
+              Persyaratan (Requirements)
             </label>
-            <input
-              type="text"
+            <textarea
               required
-              className="input input-bordered w-full bg-white text-gray-800"
-              value={formData.location}
+              className="textarea textarea-bordered w-full bg-white text-gray-800 h-24"
+              value={formData.requirements}
               onChange={(e) =>
-                setFormData({ ...formData, location: e.target.value })
+                setFormData({ ...formData, requirements: e.target.value })
               }
-              placeholder="Contoh: Yogyakarta"
-            />
+              placeholder="Tuliskan persyaratan kandidat..."
+            ></textarea>
           </div>
 
-          {/* Input Tanggal Tutup */}
+          {/* Google Form URL */}
           <div>
             <label className="block text-sm font-medium text-gray-700 mb-1">
-              Tanggal Tutup
+              Link Google Form / Aplikasi (Opsional)
             </label>
             <input
-              type="date"
-              required
+              type="url"
               className="input input-bordered w-full bg-white text-gray-800"
-              value={formData.close_date}
+              value={formData.google_form_url}
               onChange={(e) =>
-                setFormData({ ...formData, close_date: e.target.value })
+                setFormData({ ...formData, google_form_url: e.target.value })
               }
+              placeholder="https://forms.gle/..."
             />
           </div>
 
-          {/* Tombol Aksi */}
-          <div className="flex justify-end gap-3 mt-8 pt-4 border-t border-gray-100">
+          <div className="flex justify-end gap-3 mt-6">
             <button
               type="button"
               onClick={onClose}
-              className="btn btn-ghost text-gray-600 hover:bg-gray-100"
               disabled={loading}
+              className="btn btn-ghost text-gray-600"
             >
               Batal
             </button>
@@ -168,14 +247,14 @@ const JobFormModal = ({ isOpen, onClose, onSuccess, dataToEdit }) => {
                   Menyimpan...
                 </>
               ) : (
-                "Simpan Data"
+                "Simpan Lowongan"
               )}
             </button>
           </div>
         </form>
       </div>
     </div>,
-    document.body // Target Render
+    document.body
   );
 };
 

@@ -2,8 +2,6 @@
 import { useNavigate, useLocation } from "react-router-dom";
 import { useEffect, useMemo, useState } from "react";
 import axios from "axios";
-import Layout from "../components/Layout";
-import Footer from "../components/Footer";
 import Container from "../components/Container";
 
 const API_BASE = "http://127.0.0.1:8000/api";
@@ -150,8 +148,7 @@ const SyaratLoker = () => {
     };
 
     return (
-        <Layout>
-            <div className="w-full mx-auto pt-[120px] text-black px-4">
+        <div className="w-full mx-auto pt-[120px] text-black px-4">
                 <Container>
                     {/* 🔹 Back to List */}
                     <div
@@ -255,9 +252,7 @@ const SyaratLoker = () => {
                         Daftar Sekarang
                     </button>
                 </Container>
-            </div>
-            <Footer />
-        </Layout>
+        </div>
     );
 };
 

@@ -1,6 +1,5 @@
 import axios from "axios";
 import { useState, useEffect } from "react";
-import AdminLayout from "../layouts/AdminLayout";
 
 const Profil = () => {
     const [username, setUsername] = useState("");
@@ -82,8 +81,7 @@ const Profil = () => {
     };
 
     return (
-        <AdminLayout>
-            <div className="flex flex-col items-center w-full mx-auto pt-[120px] pb-[100px] border-2 border-gray-200 rounded-lg">
+        <div className="p-6">
                 {/* Avatar */}
                 <div className="avatar">
                     <div className="ring-primary ring-offset-base-100 w-24 rounded-full ring-2 ring-offset-2 mb-[27px]">
@@ -185,7 +183,6 @@ const Profil = () => {
                     </button>
                 </div>
             </div>
-        </AdminLayout>
     );
 };
 

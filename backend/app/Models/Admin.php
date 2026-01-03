@@ -14,9 +14,29 @@ class Admin extends Authenticatable
         'name',
         'email',
         'password',
-        'role',
+        'role',     // role tetap ada
+        'role_id',  // foreign key ke roles table
         'avatar'
     ];
 
-    protected $hidden = ['password'];
+    protected $hidden = [
+        'password',
+        'remember_token', // opsional, tapi sangat umum
+    ];
+
+    /**
+     * Cek apakah user memiliki role tertentu.
+     *
+     * Contoh:
+     * $user->hasRole('admin')
+     * $user->hasRole(['admin', 'superadmin'])
+     */
+    public function hasRole($roles)
+    {
+        if (is_array($roles)) {
+            return in_array($this->role, $roles);
+        }
+
+        return $this->role === $roles;
+    }
 }

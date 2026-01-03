@@ -1,6 +1,5 @@
 import { useEffect, useMemo, useState } from "react";
 import axios from "axios";
-import AdminLayout from "../layouts/AdminLayout";
 
 const SUB_MAX = 100;
 const HEAD_MAX = 255;
@@ -298,8 +297,7 @@ const AdminEditTentangKami = () => {
     };
 
     return (
-        <AdminLayout>
-            <div className="flex flex-col items-center w-full mx-auto pt-[120px] pb-[100px]">
+        <div className="p-6">
                 <h1 className="text-black text-4xl md:text-5xl font-bold italic mb-6">
                     EDIT TENTANG KAMI
                 </h1>
@@ -612,7 +610,6 @@ const AdminEditTentangKami = () => {
                     </div>
                 </div>
             </div>
-        </AdminLayout>
     );
 };
 

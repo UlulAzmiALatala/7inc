@@ -1,7 +1,6 @@
 // src/admin/home/EditHeroSection.jsx
 import { useEffect, useMemo, useState } from "react";
 import axios from "axios";
-import AdminLayout from "../layouts/AdminLayout";
 
 const API_BASE = "http://127.0.0.1:8000/api";
 
@@ -235,7 +234,7 @@ const EditHeroSection = () => {
     }, []);
 
     return (
-        <AdminLayout>
+        <>
             <h1 className="text-black text-center font-bold text-5xl italic">EditHeroSection</h1>
 
             {/* Alerts */}
@@ -354,7 +353,7 @@ const EditHeroSection = () => {
                     {currentId && <span className="text-xs text-gray-400 ml-2">ID: {currentId}</span>}
                 </div>
             </div>
-        </AdminLayout>
+        </>
     );
 };
 
